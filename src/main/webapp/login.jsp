@@ -1,3 +1,4 @@
+<%@ page language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -19,14 +20,14 @@
     <div class="container">
       <form method="POST" action="${contextPath}/login" class="form-signin">
         <h2 class="form-heading">
-        	<spring:message code="login.label" var="Log in"></spring:message>
+            <spring:message code="login.label"/>
         </h2>
 <div style="text-align: right;padding:5px;margin:5px 0px;">
        <a href="${contextPath}/login?lang=en">en</a>
        &nbsp;|&nbsp;
-       <a href="${contextPath}/login?lang=zh">zh</a>
+       <a href="${contextPath}/login?lang=zh_CN">zh</a>
        &nbsp;|&nbsp;
-       <a href="${contextPath}/login?lang=ja">ja</a>
+       <a href="${contextPath}/login?lang=ja_JP">ja</a>
     </div>
         <div class="form-group ${error != null ? 'has-error' : ''}">
             <span>${message}</span>

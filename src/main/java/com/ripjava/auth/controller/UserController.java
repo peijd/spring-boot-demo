@@ -1,5 +1,7 @@
 package com.ripjava.auth.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +14,18 @@ import com.ripjava.auth.model.User;
 import com.ripjava.auth.service.SecurityService;
 import com.ripjava.auth.service.UserService;
 import com.ripjava.auth.validator.UserValidator;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.support.RequestContextUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 @Controller
 public class UserController {
+
+    protected final Log logger = LogFactory.getLog(getClass());
+
     @Autowired
     private UserService userService;
 
@@ -24,30 +35,34 @@ public class UserController {
     @Autowired
     private UserValidator userValidator;
 
-    @GetMapping("/registration")
-    public String registration(Model model) {
-        model.addAttribute("userForm", new User());
+    @Autowired
+    private LocaleResolver localeFilter;
 
-        return "registration";
-    }
+        @GetMapping("/registration")
+        public String registration(Model model) {
+            model.addAttribute("userForm", new User());
 
-    @PostMapping("/registration")
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
-        userValidator.validate(userForm, bindingResult);
-
-        if (bindingResult.hasErrors()) {
             return "registration";
         }
 
-        userService.save(userForm);
+        @PostMapping("/registration")
+        public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+            userValidator.validate(userForm, bindingResult);
 
-        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
+            if (bindingResult.hasErrors()) {
+                return "registration";
+            }
 
-        return "redirect:/welcome";
-    }
+            userService.save(userForm);
+
+            securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
+
+            return "redirect:/welcome";
+        }
 
     @GetMapping("/login")
     public String login(Model model, String error, String logout) {
+
         if (error != null)
             model.addAttribute("error", "Your username and password is invalid.");
 
